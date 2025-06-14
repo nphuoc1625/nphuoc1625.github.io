@@ -1,6 +1,10 @@
 # Portfolio Website Development Versions
 
-## Dev v0.5.0 (Current)
+## Dev v0.5.1 (Current)
+- Fixed roadmap template missing content
+- Restored roadmap navigation functionality
+
+## Dev v0.5.0
 - Separated HTML templates from JavaScript:
   - Created templates directory for HTML files
   - Moved section templates to separate files
