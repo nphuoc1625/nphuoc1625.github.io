@@ -1,3 +1,9 @@
+import { createExperienceSection } from '../components/Experience.js';
+import { createGeneralSection } from '../components/General.js';
+import { createProjectsSection } from '../components/Projects.js';
+import { createRoadmap } from '../components/Roadmap.js';
+import { createSkillsSection } from '../components/Skills.js';
+
 // Initialize ScrollReveal
 const sr = ScrollReveal({
     origin: 'bottom',
@@ -7,137 +13,68 @@ const sr = ScrollReveal({
     reset: false
 });
 
-// Reveal elements on scroll
-document.addEventListener('DOMContentLoaded', () => {
-    sr.reveal('.section', {
-        interval: 200
-    });
-});
+// Render all sections
+async function renderSections() {
+    try {
+        const mainContent = document.querySelector('.main-content');
 
-// Roadmap Navigation
-const roadmapItems = document.querySelectorAll('.roadmap-item');
-const sections = document.querySelectorAll('.section');
+        // Load and render all sections
+        const [general, skills, experience, projects] = await Promise.all([
+            createGeneralSection(),
+            createSkillsSection(),
+            createExperienceSection(),
+            createProjectsSection()
+        ]);
 
-// Update active roadmap item based on scroll position
-function updateRoadmapIndicator() {
-    const scrollPosition = window.scrollY + window.innerHeight / 2;
+        mainContent.innerHTML = general + skills + experience + projects;
 
-    sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
+        // Add roadmap after header
+        const header = document.querySelector('.header');
+        const roadmap = await createRoadmap();
+        header.insertAdjacentHTML('afterend', roadmap);
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-            roadmapItems.forEach(item => item.classList.remove('active'));
-            roadmapItems[index].classList.add('active');
-        }
-    });
-}
+        // Initialize roadmap navigation after rendering
+        initRoadmapNavigation();
 
-// Smooth scroll to section when clicking roadmap item
-roadmapItems.forEach((item, index) => {
-    item.addEventListener('click', () => {
-        sections[index].scrollIntoView({ behavior: 'smooth' });
-    });
-});
-
-// Update roadmap indicator on scroll
-window.addEventListener('scroll', updateRoadmapIndicator);
-
-// Sample data for skills
-const skills = [
-    { name: 'JavaScript', level: 90 },
-    { name: 'HTML/CSS', level: 85 },
-    { name: 'React', level: 80 },
-    { name: 'Node.js', level: 75 },
-    { name: 'Python', level: 70 },
-    { name: 'SQL', level: 65 }
-];
-
-// Populate skills section
-function populateSkills() {
-    const skillsGrid = document.querySelector('.skills-grid');
-    skills.forEach(skill => {
-        const skillElement = document.createElement('div');
-        skillElement.className = 'skill-item';
-        skillElement.innerHTML = `
-            <h3>${skill.name}</h3>
-            <div class="skill-bar">
-                <div class="skill-level" style="width: ${skill.level}%"></div>
-            </div>
-        `;
-        skillsGrid.appendChild(skillElement);
-    });
-}
-
-// Sample data for experience
-const experiences = [
-    {
-        title: 'Senior Developer',
-        company: 'Tech Company',
-        period: '2020 - Present',
-        description: 'Led development of multiple web applications using React and Node.js.'
-    },
-    {
-        title: 'Web Developer',
-        company: 'Digital Agency',
-        period: '2018 - 2020',
-        description: 'Developed responsive websites and implemented front-end features.'
+        // Initialize ScrollReveal after content is loaded
+        sr.reveal('.section', {
+            interval: 200
+        });
+    } catch (error) {
+        console.error('Error rendering sections:', error);
     }
-];
-
-// Populate experience section
-function populateExperience() {
-    const timeline = document.querySelector('.timeline');
-    experiences.forEach(exp => {
-        const expElement = document.createElement('div');
-        expElement.className = 'experience-item';
-        expElement.innerHTML = `
-            <h3>${exp.title}</h3>
-            <h4>${exp.company}</h4>
-            <p class="period">${exp.period}</p>
-            <p>${exp.description}</p>
-        `;
-        timeline.appendChild(expElement);
-    });
 }
 
-// Sample data for projects
-const projects = [
-    {
-        title: 'E-commerce Platform',
-        description: 'A full-stack e-commerce solution with React and Node.js',
-        tech: ['React', 'Node.js', 'MongoDB'],
-        link: '#'
-    },
-    {
-        title: 'Task Management App',
-        description: 'A collaborative task management application',
-        tech: ['Vue.js', 'Firebase', 'Tailwind CSS'],
-        link: '#'
+// Initialize roadmap navigation
+function initRoadmapNavigation() {
+    const roadmapItems = document.querySelectorAll('.roadmap-item');
+    const sections = document.querySelectorAll('.section');
+
+    // Update active roadmap item based on scroll position
+    function updateRoadmapIndicator() {
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+        sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                roadmapItems.forEach(item => item.classList.remove('active'));
+                roadmapItems[index].classList.add('active');
+            }
+        });
     }
-];
 
-// Populate projects section
-function populateProjects() {
-    const projectsGrid = document.querySelector('.projects-grid');
-    projects.forEach(project => {
-        const projectElement = document.createElement('div');
-        projectElement.className = 'project-card';
-        projectElement.innerHTML = `
-            <h3>${project.title}</h3>
-            <p>${project.description}</p>
-            <div class="tech-stack">
-                ${project.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
-            </div>
-            <a href="${project.link}" class="project-link">View Project</a>
-        `;
-        projectsGrid.appendChild(projectElement);
+    // Smooth scroll to section when clicking roadmap item
+    roadmapItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+        });
     });
+
+    // Update roadmap indicator on scroll
+    window.addEventListener('scroll', updateRoadmapIndicator);
 }
 
-// Initialize all sections
-document.addEventListener('DOMContentLoaded', () => {
-    populateSkills();
-    populateExperience();
-    populateProjects();
-}); 
+// Initialize the application
+document.addEventListener('DOMContentLoaded', renderSections); 

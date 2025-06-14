@@ -1,16 +1,25 @@
 :root {
-    --primary-color: #2563eb;
-    --text-color: #1f2937;
-    --bg-color: #ffffff;
-    --secondary-bg: #f3f4f6;
-    --border-color: #e5e7eb;
-    --hover-color: #3b82f6;
+    /* Dark theme colors */
+    --bg-color: #1a1b1e;
+    --secondary-bg: #2c2d31;
+    --text-color: #a3b1cc;
+    --text-color-hover: #ffffff;
+    --primary-color: #4dabf7;
+    --primary-color-hover: #74c0fc;
+    --border-color: #373a40;
+    --highlight-color: #339af0;
+    --roadmap-line: #373a40;
+    --roadmap-dot: #4dabf7;
+    --roadmap-dot-active: #74c0fc;
+    --roadmap-text: #868e96;
+    --roadmap-text-active: #ffffff;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {
@@ -35,6 +44,7 @@ body {
     background-color: var(--bg-color);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .nav-container {
@@ -65,7 +75,7 @@ body {
 }
 
 .nav-link:hover {
-    color: var(--primary-color);
+    color: var(--text-color-hover);
 }
 
 /* Roadmap Indicator */
@@ -84,8 +94,20 @@ body {
     display: flex;
     align-items: center;
     cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.roadmap-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 24px;
+    width: 2px;
+    height: 32px;
+    background-color: var(--roadmap-line);
+    transition: background-color 0.3s ease;
 }
 
 .roadmap-item:hover {
@@ -96,17 +118,29 @@ body {
     opacity: 1;
 }
 
+.roadmap-item.active .roadmap-dot {
+    background-color: var(--roadmap-dot-active);
+    box-shadow: 0 0 0 4px rgba(116, 192, 252, 0.2);
+}
+
+.roadmap-item.active .roadmap-label {
+    color: var(--roadmap-text-active);
+}
+
 .roadmap-dot {
     width: 12px;
     height: 12px;
-    background-color: var(--primary-color);
+    background-color: var(--roadmap-dot);
     border-radius: 50%;
     margin-right: 0.5rem;
+    transition: all 0.3s ease;
 }
 
 .roadmap-label {
     font-size: 0.875rem;
     font-weight: 500;
+    color: var(--roadmap-text);
+    transition: color 0.3s ease;
 }
 
 /* Main Content */
@@ -156,10 +190,13 @@ body {
     padding: 1.5rem;
     border-radius: 8px;
     transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
 }
 
 .skill-item:hover {
     transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 .skill-bar {
@@ -191,6 +228,7 @@ body {
     background-color: var(--secondary-bg);
     border-radius: 8px;
     margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
 }
 
 .experience-item::before {
@@ -204,7 +242,7 @@ body {
 }
 
 .experience-item h4 {
-    color: var(--primary-color);
+    color: var(--text-color-hover);
     margin-bottom: 0.5rem;
 }
 
@@ -229,10 +267,13 @@ body {
     padding: 2rem;
     border-radius: 8px;
     transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
 }
 
 .project-card:hover {
     transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 .tech-stack {
@@ -244,7 +285,7 @@ body {
 
 .tech-tag {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-color-hover);
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.875rem;
@@ -260,7 +301,7 @@ body {
 }
 
 .project-link:hover {
-    color: var(--hover-color);
+    color: var(--primary-color-hover);
 }
 
 /* Animation Classes */
@@ -280,18 +321,25 @@ h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    color: var(--text-color-hover);
 }
 
 h2 {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
+    color: var(--text-color-hover);
 }
 
 h3 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    color: var(--text-color-hover);
+}
+
+h4 {
+    color: var(--text-color-hover);
 }
 
 .subtitle {
